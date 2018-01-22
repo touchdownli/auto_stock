@@ -61,15 +61,22 @@ class AutoTrans():
     api.cancel(orderno='23232,2323',orderdate='20180115,20180116')
     api.deal_list(begin=20180115,end=20180116)
     '''
-
+import time
 if __name__ == '__main__':
   auto_trans = AutoTrans()
-  print "start run..."
+  now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+  print "%s start run...\n" % now
   for i in range(30):
-    items = auto_trans.select_share()
-    if items:
-      df = pd.DataFrame.from_dict(items)
-      auto_trans.do_trans(df)
-    print "run one time select %d codes" % len(items)
-    sleep(60)
-  print "end run"
+    try:
+      items = auto_trans.select_share()
+      if items:
+        df = pd.DataFrame.from_dict(items)
+        auto_trans.do_trans(df)
+    except Exception as e:
+      print "%s\n" % e
+      pass
+    now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    print "%s run one time select %d codes\n" % (now, len(items))
+    time.sleep(60)
+  now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+  print "%s end run\n" % now
